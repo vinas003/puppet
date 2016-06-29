@@ -24,10 +24,10 @@ class openvpn {
     # Here we set the Web-files definitions, root:root 644 are default premissions
     file { "$module_name-$name":                         # Lets name this resource web-$name meaning prefix the filename with the puppet class name
       path    => $name,                                  # The filepath
-      mode    => $mode,                                    # Set permissions to 600
+      mode    => $mode,                                  # Set permissions to 600
       owner   => $owner,                                 # Set owner to root
       group   => $owner,                                 # Set group owner to root
-      notify  => Service[$openvpn::services],                # It should notify the service httpd if the file changes
+      notify  => Service[$openvpn::services],            # It should notify the service httpd if the file changes
       require => [                                       # Before we copy the file these packages, directories must be installed
                   Package[$openvpn::packages],
                   File['/etc/systemd/system/openvpn@server.service.d'],

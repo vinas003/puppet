@@ -10,6 +10,12 @@ class ntp {
   service { $services:
     ensure  => running,
     enable  => true,
-    require => Package['ntp'],
-  }  
+    require => Package[$packages],
+  }
+
+  # Set the timezone
+  file { '/etc/localtime':
+    ensure => link,
+    target => '/usr/share/zoneinfo/Europe/Stockholm',
+  }
 }
