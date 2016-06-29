@@ -1,0 +1,12 @@
+---
+:url: "https://puppet.vinasec.se"
+:ssl_ca: "/var/lib/puppet/ssl/ca/ca_crt.pem"
+:ssl_cert: "/var/lib/puppet/ssl/certs/puppet.vinasec.se.pem"
+:ssl_key: "/var/lib/puppet/ssl/private_keys/puppet.vinasec.se.pem"
+:user: ""
+:password: ""
+:puppetdir: "/var/lib/puppet"
+:puppetuser: "puppet"
+:facts: true
+:timeout: 60
+:threads: null
