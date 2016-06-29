@@ -1,6 +1,7 @@
+[Service]
+
 # Enable ip forwarding
-ExecStartPre=/bin/sh -c "/usr/bin/echo 1 > /proc/sys/net/ipv4/ip_forward"
 ExecStartPre=/usr/sbin/sysctl -w net.ipv4.ip_forward=1
 
-# Remove the route we get from openstack since this is the vpn server
+# Remove the vpn route we get from openstack since this is the vpn server
 ExecStartPre=/sbin/ip route del 10.8.0.32/27 via 10.8.0.101 dev eth0
