@@ -50,12 +50,11 @@ class openvpn {
      '/etc/openvpn/server.crt',
      '/etc/openvpn/server.key',
      '/etc/openvpn/dh.pem',
-     '/etc/openvpn/ccd/client1',
     ]:
   }
 
   # This is not a sensitive file so 644 on it
-  openvpn-file { '/etc/systemd/system/openvpn@server.service.d/override.conf':
+  openvpn-file { ['/etc/systemd/system/openvpn@server.service.d/override.conf', '/etc/openvpn/ccd/client1']:
     mode => 644,
   }
   
