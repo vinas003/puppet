@@ -15,6 +15,7 @@ class yum {
                'htop',
                'sendmail',
                'git',
+               'postfix',
                'emacs',
                'rpm-build',
                'mlocate',

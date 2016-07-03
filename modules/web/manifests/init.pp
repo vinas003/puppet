@@ -82,7 +82,7 @@ class web {
       notify  => Service[$web::services],                # It should notify the service httpd if the file changes
       require => [                                       # Before we copy the file these packages, directories must be installed
                   Package[$web::packages],
-                  File['/etc/letsencrypt/live/vinasec.se'],
+                  Class['certificates'],
                  ],       
       content => template("$module_name/$filename.erb"), # the puppetmaster find this file in path-to-puppet-modules/web/templates/$filename.erb .erb since its a template
     }
@@ -99,17 +99,6 @@ class web {
       creates => $creates,                  # Puppet executes the command when this file NOT exists (so first time)
       command => $command,
     }
-  }
-
-  # Here we can use the standards we have defined for our web directories
-  web-directory {
-    [
-     '/etc/letsencrypt',
-     '/etc/letsencrypt/live',
-     '/etc/letsencrypt/live/vinasec.se'
-    ]:
-      mode  => 700,
-      owner => root,
   }
 
   # Cache dir for mod_pagespeed
@@ -135,18 +124,10 @@ class web {
      '/etc/httpd/conf.d/vinasec.se_ssl.conf',
      '/etc/httpd/modsecurity.d/activated_rules/rules-01.conf',
      '/etc/httpd/modsecurity.d/modsecurity_crs_10_config.conf',
-     '/etc/letsencrypt/live/vinasec.se/cert.pem',
-     '/etc/letsencrypt/live/vinasec.se/fullchain.pem',
      '/etc/cron.d/vina-website-daily', # cron file which daily does git pull on the website
     ]:
   }
 
-  # Make SURE this is read only by root, do not relay on defaults
-  web-file { '/etc/letsencrypt/live/vinasec.se/privkey.pem':
-    mode  => 700,
-    owner => root,
-  }
-  
   # If fails then we have a copy of the rpm in this module under templates for manual installation
   web-exec { 'install-mod-pagespeed':
     command => 'curl https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-stable_current_x86_64.rpm -o mod-pagespeed-stable_current_x86_64.rpm && rpm -U mod-pagespeed-stable_current_x86_64.rpm && rm -f mod-pagespeed-stable_current_x86_64.rpm',

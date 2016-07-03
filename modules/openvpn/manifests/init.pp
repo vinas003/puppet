@@ -53,7 +53,7 @@ class openvpn {
     ]:
   }
 
-  # This is not a sensitive file so 644 on it
+  # These are not a sensitive files so 644 on them
   openvpn-file { ['/etc/systemd/system/openvpn@server.service.d/override.conf', '/etc/openvpn/ccd/client1']:
     mode => 644,
   }

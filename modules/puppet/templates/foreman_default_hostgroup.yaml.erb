@@ -1,0 +1,34 @@
+# Example default_hostgroup settings
+#
+# Must be placed in ~foreman/config/settings.plugins.d/
+#
+# :facts_map:
+#   <hostgroup>:
+#     <fact_name>: <regex>
+#
+# The Hostgroup is the full label, include any Parent Hostgroups, eg Base/Redhat
+#
+# The regex can be written either with or without the enclosing slashes:
+#   ^test$      - valid
+#   /^test$/    - also valid
+#
+# List the regexes in the order of prority, you can have as many as you like. The
+# first one to match will be used. Debug statements are written to the log if you
+# are getting the wrong group applied.
+---
+:default_hostgroup:
+  :facts_map:
+    "Base servers/Web servers":
+      "hostname": "^web"
+    "Base servers/Mail servers":
+      "hostname": "^mail"
+    "Base servers/DNS servers":
+      "hostname": "^dns"
+    "Base servers/Puppetmaster Foreman Activemq servers":
+      "hostname": "^puppet"
+    "Base servers/VPN servers":
+      "hostname": "^vpn"
+    "Base servers/Root servers":
+      "hostname": "^root"
+    "Base servers": # Ensure we have the correct fqdn
+      "fqdn": "/vinasec.se$/"
