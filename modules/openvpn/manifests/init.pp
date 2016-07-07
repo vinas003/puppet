@@ -30,14 +30,18 @@ class openvpn {
       notify  => Service[$openvpn::services],            # It should notify the service httpd if the file changes
       require => [                                       # Before we copy the file these packages, directories must be installed
                   Package[$openvpn::packages],
-                  File['/etc/systemd/system/openvpn@server.service.d'],
                   File['/etc/openvpn/ccd'],
                  ],
       content => template("$module_name/$filename.erb"), # The puppetmaster find this file in path-to-puppet-modules/web/templates/$filename.erb .erb since its a template
     }
   }
 
-  file { ['/etc/systemd/system/openvpn@server.service.d', '/etc/openvpn/ccd']:
+  file_line { 'openvpn-ip_forwarding':
+    path => '/etc/sysctl.conf',
+    line => 'net.ipv4.ip_forward = 1',
+  }
+    
+  file { ['/etc/openvpn/ccd']:
     ensure  => directory,
     require => Package[$openvpn::packages],
   }
@@ -54,14 +58,15 @@ class openvpn {
   }
 
   # These are not a sensitive files so 644 on them
-  openvpn-file { ['/etc/systemd/system/openvpn@server.service.d/override.conf', '/etc/openvpn/ccd/client1']:
+  openvpn-file { ['/etc/openvpn/ccd/client1']:
     mode => 644,
   }
-  
-  exec { 'openvpn-override-systemd-file':
-    command => 'systemctl daemon-reload && touch /usr/share/openvpn-override-systemd-file',
-    creates => '/usr/share/openvpn-override-systemd-file',
+
+  # Needed the very first time we run puppet on a vpn server
+  exec { 'openvpn-ensure_ip_forward':
+    command => 'sysctl -w net.ipv4.ip_forward=1 && touch /usr/share/openvpn-ip_forward',
+    creates => '/usr/share/openvpn-ip_forward',
     path    => ['/usr/bin', '/usr/sbin'], # Path to search for commands
-    require => Openvpn-file['/etc/systemd/system/openvpn@server.service.d/override.conf'],
+    require => Service[$services],
   }  
 }
