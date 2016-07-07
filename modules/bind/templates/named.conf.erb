@@ -8,7 +8,8 @@
 //
 
 acl "trusted" {
-        10.10.0.0/24;    # openstack
+        10.10.0.0/24;   # openstack
+        10.9.0.0/24;    # vpn clients
         10.8.0.0/24;    # openstack DMZ
 };
 
@@ -37,7 +38,7 @@ options {
 	*/
 	recursion yes;
 
-	dnssec-enable yes; # lycn
+	dnssec-enable yes; # vina
 	dnssec-validation yes;
 	dnssec-lookaside auto;
 
