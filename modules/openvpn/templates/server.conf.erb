@@ -245,16 +245,20 @@ keepalive 10 120
 # The second parameter should be '0'
 # on the server and '1' on the clients.
 
+# vina
 tls-auth ta.key 0 # This file is secret
 
 # Select a cryptographic cipher.
 # This config item must be copied to
 # the client config file as well.
 ;cipher BF-CBC        # Blowfish (default)
-cipher AES-256-CBC   # AES
+;cipher AES-256-CBC   # AES
 ;cipher DES-EDE3-CBC  # Triple-DES
 
-auth SHA256
+
+# vina
+cipher AES-256-CBC   # AES
+auth SHA512
 
 # Enable compression on the VPN link.
 # If you enable it here, you must also
@@ -302,7 +306,7 @@ persist-tun
 # 4 is reasonable for general usage
 # 5 and 6 can help to debug connection problems
 # 9 is extremely verbose
-verb 3
+verb 4
 
 # Silence repeating messages.  At most 20
 # sequential messages of the same message

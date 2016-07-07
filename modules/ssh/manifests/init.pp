@@ -32,7 +32,7 @@ class ssh {
     }
   }
 
-  # Our ssh servers should have iptables with ssh anti bruteforce
+  # Our dmz ssh servers should have iptables with ssh anti bruteforce
   if ($hostname =~ /^ssh/) {
 
     package { 'iptables-services':
@@ -50,7 +50,7 @@ class ssh {
       notify  => Service['iptables'], # It should notify the service if the file changes
       require => Package['iptables-services'],
     }
-  } # End if hostname =~ /^ssh/
+  }
   
   ssh-file { ['/etc/ssh/sshd_config']:
     mode => 640,
@@ -65,6 +65,6 @@ class ssh {
     command => 'rm /etc/ssh/ssh_host_ed25519_key && ssh-keygen -N "" -t ed25519 -f /etc/ssh/ssh_host_ed25519_key && touch /etc/ssh/ssh_host_ed25519_key-generated',
     notify  => Service[$services],   # It should notify the service httpd if the file changes
     require => Package[$packages],   # Before we copy the file these packages, directories must be installed
-    creates => '/etc/ssh/ssh_host_ed25519_key-generated',              # Puppet executes the command when this file NOT exists (so first time)
+    creates => '/etc/ssh/ssh_host_ed25519_key-generated', # Puppet executes the command when this file NOT exists (so first time)
   }  
 }

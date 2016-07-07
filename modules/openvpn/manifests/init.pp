@@ -41,7 +41,7 @@ class openvpn {
     ensure  => directory,
     require => Package[$openvpn::packages],
   }
-             
+
   openvpn-file {
     [
      '/etc/openvpn/server.conf',
