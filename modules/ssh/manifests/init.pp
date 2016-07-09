@@ -32,24 +32,19 @@ class ssh {
     }
   }
 
-  # Our dmz ssh servers should have iptables with ssh anti bruteforce
-  if ($hostname =~ /^ssh/) {
-
-    package { 'iptables-services':
-      ensure => installed,
-    }
+  # Run the ssh fallback server on different port since we use a router
+  if ($hostname != ssh2) {
+    $ssh_port = 22
+  } else {
+    $ssh_port = 9538
     
-    service { 'iptables':
-      ensure  => running,
-      enable  => true,
-      require => Package['iptables-services'],
-    }
-    
-    ssh-file { ['/etc/sysconfig/iptables']:
-      mode    => 640,
-      notify  => Service['iptables'], # It should notify the service if the file changes
-      require => Package['iptables-services'],
-    }
+    exec { 'ssh-selinux-allow-different-port':
+      path    => ['/usr/bin', '/usr/sbin'], # Path to search for commands
+      command => "semanage port -a -t ssh_port_t -p tcp $ssh_port && touch /usr/share/ssh-selinux-allow-different-port",
+      notify  => Service[$services],   # It should notify the service httpd if the file changes
+      require => Package[$packages],   # Before we copy the file these packages, directories must be installed
+      creates => '/usr/share/ssh-selinux-allow-different-port', # Puppet executes the command when this file NOT exists (so first time)
+    }      
   }
   
   ssh-file { ['/etc/ssh/sshd_config']:

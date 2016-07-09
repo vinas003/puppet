@@ -13,10 +13,31 @@
 # -A FORWARD -j REJECT --reject-with icmp-host-prohibited
 
 # vina
-# Allow from vpn clients
+
+# Standard stuff
+-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+
+# Allow from vpn/ssh clients/server and internal network
 -A INPUT -p tcp -s 10.9.0.0/24 --dport 22 -j ACCEPT
+-A INPUT -p tcp -s 10.8.0.101 --dport 22 -j ACCEPT
+-A INPUT -p tcp -s 10.8.0.102 --dport 22 -j ACCEPT
+-A INPUT -p tcp -s 10.8.0.108 --dport 22 -j ACCEPT
+-A INPUT -p tcp -s 10.8.0.109 --dport 22 -j ACCEPT
+-A INPUT -p tcp -s 10.10.0.0/24 --dport 22 -j ACCEPT
 
 # Drop bruteforces for 12 hours in hope they will go away
 -A INPUT -p tcp --dport 22 -m state --state NEW -m recent --set --name SSHBRUTE -j ACCEPT
--A INPUT -p tcp --dport 22 -m recent --update --seconds 43200 --hitcount 5 --rttl --name SSHBRUTE -j DROP
+-A INPUT -p tcp --dport 22 -m recent --update --seconds 18000 --hitcount 20 --rttl --name SSHBRUTE -j DROP
+
+# Class specific rules here
+<% @rules.each do |rule| -%>
+<%= rule %>
+<% end -%>
+
+# Drop all other incoming and forwarded connections
+-A INPUT -j DROP
+-A FORWARD -j DROP
+
 COMMIT
