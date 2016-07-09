@@ -32,7 +32,6 @@ class iptables {
               '# Allow ip forwarding to and from openvpn interface to eth0',
               '-A FORWARD -i tun0 -o eth0 -j ACCEPT',
               '-A FORWARD -i eth0 -o tun0 -j ACCEPT',
-              
               ]
   } elsif ($hostname =~ /^vpn/) { # This will match vpn2, vpn3 etc but not vpn since its matched above
     $rules = [
@@ -41,7 +40,6 @@ class iptables {
               '# Allow ip forwarding to and from openvpn interface to eth0',
               '-A FORWARD -i tun0 -o eth0 -j ACCEPT',
               '-A FORWARD -i eth0 -o tun0 -j ACCEPT',
-
               ]
   } elsif ($hostname =~ /^mail/) {
     $rules = [
@@ -69,7 +67,7 @@ class iptables {
               ]
   }
     
-  # Our dmz ssh servers should have iptables with ssh anti bruteforce
+  # The template that uses the rules above
   file { ['/etc/sysconfig/iptables']:
     mode    => 640,
     notify  => Service[$services], # It should notify the service if the file changes
