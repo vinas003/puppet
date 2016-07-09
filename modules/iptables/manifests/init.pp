@@ -65,6 +65,8 @@ class iptables {
               '# Allow vpn clients to access foreman',
               '-A INPUT -p tcp -s 10.9.0.0/24 --dport 443 -j ACCEPT',
               ]
+  } else { # everone else who dont need special iptables rules
+    $rules = [ ]
   }
     
   # The template that uses the rules above
