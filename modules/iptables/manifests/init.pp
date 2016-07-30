@@ -65,6 +65,17 @@ class iptables {
               '# Allow vpn clients to access foreman',
               '-A INPUT -p tcp -s 10.9.0.0/24 --dport 443 -j ACCEPT',
               ]
+  } elsif ($hostname =~ /^nfs/) {
+    $rules = [
+              '# Allow incoming nfs connections',
+              '-A INPUT -p tcp -s 10.8.0.0/24 -m multiport --dports 111,2049,662,892,32803 -j ACCEPT',
+              '-A INPUT -p tcp -s 10.9.0.0/24 -m multiport --dports 111,2049,662,892,32803 -j ACCEPT',
+              '-A INPUT -p tcp -s 10.10.0.0/24 -m multiport --dports 111,2049,662,892,32803 -j ACCEPT',
+              '-A INPUT -p udp -s 10.8.0.0/24 -m multiport --dports 111,2049,662,892,32769 -j ACCEPT',
+              '-A INPUT -p udp -s 10.9.0.0/24 -m multiport --dports 111,2049,662,892,32769 -j ACCEPT',
+              '-A INPUT -p udp -s 10.10.0.0/24 -m multiport --dports 111,2049,662,892,32769 -j ACCEPT',
+              ]
+
   } else { # everone else who dont need special iptables rules
     $rules = [ ]
   }
